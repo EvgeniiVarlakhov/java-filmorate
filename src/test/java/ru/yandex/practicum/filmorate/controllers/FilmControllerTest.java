@@ -5,10 +5,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.yandex.practicum.filmorate.Adapter.LocalDateAdapter;
+import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -17,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FilmController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class FilmControllerTest {
 
     @Autowired
@@ -43,7 +45,7 @@ public class FilmControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Название фильма не может быть пустым.", mvcResult.getResolvedException().getMessage());
     }
@@ -55,7 +57,7 @@ public class FilmControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Дата релиза не может быть раньше 28.12.1895."
                 , mvcResult.getResolvedException().getMessage());
@@ -71,7 +73,7 @@ public class FilmControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Длина описания не может быть более 200 символов."
                 , mvcResult.getResolvedException().getMessage());
@@ -84,7 +86,7 @@ public class FilmControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Продолжительность фильма не может быть отрицательной."
                 , mvcResult.getResolvedException().getMessage());

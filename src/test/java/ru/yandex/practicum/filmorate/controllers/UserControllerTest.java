@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.yandex.practicum.filmorate.Adapter.LocalDateAdapter;
+import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerTest {
 
     @Autowired
@@ -43,7 +45,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("email не содержит @.", mvcResult.getResolvedException().getMessage());
     }
@@ -55,7 +57,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("email не может быть пустым.", mvcResult.getResolvedException().getMessage());
     }
@@ -67,7 +69,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Поле login не может быть пустым.", mvcResult.getResolvedException().getMessage());
     }
@@ -79,7 +81,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Поле login не должно содержать пробелы.", mvcResult.getResolvedException().getMessage());
     }
@@ -110,7 +112,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Дата рождения не может быть в будущем.", mvcResult.getResolvedException().getMessage());
     }
@@ -154,7 +156,7 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(put("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(newUser)))
-                .andExpect(status().is5xxServerError()).andReturn();
+                .andExpect(status().isNotFound()).andReturn();
 
         assertEquals("Пользователь с таким ID не существует.", mvcResult.getResolvedException().getMessage());
     }
