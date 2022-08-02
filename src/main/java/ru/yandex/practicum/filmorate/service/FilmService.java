@@ -35,7 +35,7 @@ public class FilmService {
     }
 
     public Film createFilm(Film film) {
-        validated(film);
+        validateFilm(film);
         Film newFilm = filmStorage.addFilm(film);
         log.info("Добавлен новый фильм: {}", newFilm);
         return newFilm;
@@ -43,7 +43,7 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
         if (!filmStorage.getFilmsList().containsKey(film.getId())) {
-            log.error("Ошибка при обновлении фильма.Фильма с таким ID не существует.'{}'", film.getId());
+            log.error("Ошибка при обновлении фильма. Фильма с таким ID не существует. '{}'", film.getId());
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         filmStorage.overwriteFilm(film);
@@ -53,11 +53,11 @@ public class FilmService {
 
     public void addLikeToFilm(Long idFilm, Long idUser) {
         if (!filmStorage.getFilmsList().containsKey(idFilm)) {
-            log.error("Ошибка при добавлении лайка.Фильма с таким ID не существует.'{}'", idFilm);
+            log.error("Ошибка при добавлении лайка. Фильма с таким ID не существует. '{}'", idFilm);
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         if (!userStorage.getUsersList().containsKey(idUser)) {
-            log.error("Ошибка при добавлении лайка.Пользователя с таким ID не существует.'{}'", idUser);
+            log.error("Ошибка при добавлении лайка.Пользователя с таким ID не существует. '{}'", idUser);
             throw new ObjectNotFoundException("Пользователя с таким ID не существует.");
         }
         filmStorage.getFilmsList().get(idFilm).addLike(idUser);
@@ -65,11 +65,11 @@ public class FilmService {
 
     public void deleteLikeToFilm(Long idFilm, Long idUser) {
         if (!filmStorage.getFilmsList().containsKey(idFilm)) {
-            log.error("Ошибка при удалении лайка.Фильма с таким ID не существует.'{}'", idFilm);
+            log.error("Ошибка при удалении лайка. Фильма с таким ID не существует. '{}'", idFilm);
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         if (!userStorage.getUsersList().containsKey(idUser)) {
-            log.error("ООшибка при удалении лайка.Пользователя с таким ID не существует.'{}'", idUser);
+            log.error("Ошибка при удалении лайка. Пользователя с таким ID не существует. '{}'", idUser);
             throw new ObjectNotFoundException("Пользователя с таким ID не существует.");
         }
         filmStorage.getFilmsList().get(idFilm).deleteLike(idUser);
@@ -77,7 +77,7 @@ public class FilmService {
 
     public Film getFilmById(Long idFilm) {
         if (!filmStorage.getFilmsList().containsKey(idFilm)) {
-            log.error("Ошибка при получении фильма.Фильма с таким ID не существует.'{}'", idFilm);
+            log.error("Ошибка при получении фильма. Фильма с таким ID не существует. '{}'", idFilm);
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         return filmStorage.getFilmsList().get(idFilm);
@@ -91,9 +91,9 @@ public class FilmService {
     }
 
 
-    private void validated(Film film) throws InvalidValidationException {
+    private void validateFilm(Film film) throws InvalidValidationException {
         if (film.getName().isEmpty()) {
-            log.error("Ошибка при создании фильма: название фильма не указано.'{}'", film.getName());
+            log.error("Ошибка при создании фильма: название фильма не указано. '{}'", film.getName());
             throw new InvalidValidationException("Название фильма не может быть пустым.");
         }
         if (film.getReleaseDate().isBefore(VALIDDATE)) {

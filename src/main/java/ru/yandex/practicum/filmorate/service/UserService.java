@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User createUser(User user) throws InvalidValidationException {
-        validated(user);
+        validateUser(user);
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
@@ -37,7 +37,7 @@ public class UserService {
 
     public User getUserById(Long idUser) {
         if (!userStorage.getUsersList().containsKey(idUser)) {
-            log.error("Ошибка при получении пользователя: пользователя с таким ID не существует.'{}'", idUser);
+            log.error("Ошибка при получении пользователя: пользователя с таким ID не существует. '{}'", idUser);
             throw new ObjectNotFoundException("Пользователь с таким ID не существует.");
         }
         return userStorage.getUsersList().get(idUser);
@@ -45,13 +45,13 @@ public class UserService {
 
     public User updateUser(User user) throws ObjectNotFoundException {
         if (!userStorage.getUsersList().containsKey(user.getId())) {
-            log.error("Ошибка при обновлении пользователя: пользователя с таким ID не существует.'{}'", user.getId());
+            log.error("Ошибка при обновлении пользователя: пользователя с таким ID не существует. '{}'", user.getId());
             throw new ObjectNotFoundException("Пользователь с таким ID не существует.");
         }
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-        log.info("Пользователь ID-'{}' обновлен.'{}'", user.getId(), user);
+        log.info("Пользователь ID-'{}' обновлен. '{}'", user.getId(), user);
         return userStorage.overwriteUser(user);
     }
 
@@ -66,7 +66,7 @@ public class UserService {
     public void addFriend(Long idUser, Long idFriend) {
         if (!userStorage.getUsersList().containsKey(idUser) || !userStorage.getUsersList().containsKey(idFriend)) {
             log.error(
-                    "Ошибка добовления в друзья: пользователя с таким ID не существует.'{}'или '{}'", idUser, idFriend);
+                    "Ошибка добовления в друзья: пользователя с таким ID не существует. '{}'или '{}'", idUser, idFriend);
             throw new ObjectNotFoundException("Пользователь с таким ID не существует.");
         }
         userStorage.getUsersList().get(idUser).addFriend(idFriend);
@@ -88,7 +88,7 @@ public class UserService {
         return sameUsers;
     }
 
-    private void validated(User user) throws InvalidValidationException {
+    private void validateUser(User user) throws InvalidValidationException {
         if (user.getEmail().isEmpty()) {
             log.error("Ошибка при создании пользователя: email пустой.'{}'", user.getEmail());
             throw new InvalidValidationException("email не может быть пустым.");
