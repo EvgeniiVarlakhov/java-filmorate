@@ -47,7 +47,7 @@ public class FilmService {
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         filmStorage.overwriteFilm(film);
-        log.info("Фильм ID-{} обновлен.{}", film.getId(), film);
+        log.info("Фильм ID-{} обновлен. {}", film.getId(), film);
         return film;
     }
 
@@ -57,7 +57,7 @@ public class FilmService {
             throw new ObjectNotFoundException("Фильма с таким ID не существует.");
         }
         if (!userStorage.getUsersList().containsKey(idUser)) {
-            log.error("Ошибка при добавлении лайка.Пользователя с таким ID не существует. '{}'", idUser);
+            log.error("Ошибка при добавлении лайка. Пользователя с таким ID не существует. '{}'", idUser);
             throw new ObjectNotFoundException("Пользователя с таким ID не существует.");
         }
         filmStorage.getFilmsList().get(idFilm).addLike(idUser);
