@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class FilmService {
-    private final LocalDate VALIDDATE = LocalDate.of(1895, 12, 28);
+    private static final  LocalDate VALIDDATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
     private final FilmLikesComparator filmLikesComparator = new FilmLikesComparator();
