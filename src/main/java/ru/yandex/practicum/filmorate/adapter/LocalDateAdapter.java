@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.Adapter;
+package ru.yandex.practicum.filmorate.adapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
