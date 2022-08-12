@@ -1,18 +1,20 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -20,28 +22,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class FilmControllerTest {
-
+@AutoConfigureTestDatabase
+public class FilmControllerValidationTest {
+    Film film = new Film();
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    public void test1_createdNewFilm200() throws Exception {
-        Film film = new Film("name","desc",LocalDate.of(2020,1,1),100);
-
-        mockMvc.perform(post("/films")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().isOk());
+    @BeforeEach
+    public void createdFilm() {
+        HashSet<Genre> genres = new HashSet<>();
+        genres.add(new Genre());
+        film = new Film(0, "name10", "des10", LocalDate.of(2000, 1, 1),
+                10, new MpaRating(), genres);
     }
 
     @Test
-    public void test2_createdNewFilmNameEmpty() throws Exception {
-        Film film = new Film("","desc",LocalDate.of(2020,1,1),100);
-
+    public void test1_createdNewFilmNameEmpty() throws Exception {
+        film.setName("");
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(film)))
@@ -51,8 +51,8 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void test3_createdNewFilmBadReleaseDate() throws Exception {
-        Film film = new Film("name","desc",LocalDate.of(1800,1,1),100);
+    public void test2_createdNewFilmBadReleaseDate() throws Exception {
+        film.setReleaseDate(LocalDate.of(1800, 1, 1));
 
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
@@ -64,11 +64,10 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void test4_createdNewFilmBadDescription() throws Exception {
-        Film film = new Film("name","descdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" +
+    public void test3_createdNewFilmBadDescription() throws Exception {
+        film.setDescription("descdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" +
                 "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" +
-                "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-                ,LocalDate.of(2020,1,1),100);
+                "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
 
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
@@ -80,8 +79,8 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void test5_createdNewFilm1BadDuration() throws Exception {
-        Film film = new Film("name","desc",LocalDate.of(2020,1,1),-100);
+    public void test4_createdNewFilm1BadDuration() throws Exception {
+        film.setDuration(-100);
 
         MvcResult mvcResult = mockMvc.perform(post("/films")
                         .contentType("application/json")
@@ -90,39 +89,6 @@ public class FilmControllerTest {
 
         assertEquals("Продолжительность фильма не может быть отрицательной."
                 , mvcResult.getResolvedException().getMessage());
-    }
-
-    @Test
-    public void test6_updateFilm() throws Exception {
-        Film film = new Film("name","desc",LocalDate.of(2020,1,1),100);
-        Film film1 = new Film("newName","desc",LocalDate.of(2020,1,1),100);
-        film1.setId(1);
-        Gson gson;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeNulls();
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        gson = gsonBuilder.create();
-
-        mockMvc.perform(post("/films")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(film)))
-                .andExpect(status().isOk());
-
-        MvcResult mvcResult = mockMvc.perform(put("/films")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(film1)))
-                .andExpect(status().isOk()).andReturn();
-
-        String filmJson = mvcResult.getResponse().getContentAsString();
-        Film updateFilm = gson.fromJson(filmJson, Film.class);
-        assertEquals("newName", updateFilm.getName());
-    }
-
-    @Test
-    public void test7_getListOfFilms() throws Exception {
-        mockMvc.perform(get("/films")
-                        .contentType("application/json"))
-                .andExpect(status().isOk());
     }
 
 }
