@@ -25,8 +25,18 @@ merge into MPA_RATING (mpa_id, mpa_name, description)
 merge into USERS (USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY) values ( 10,'email10','login10','name10','2022-01-01');
 merge into USERS (USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY) values ( 20,'email20','login20','name20','2022-01-01');
 merge into USERS (USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY) values ( 30,'email30','login30','name30','2022-01-01');
+merge into USERS (USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY) values ( 40,'email40','login40','name40','2022-01-01');
+merge into USERS (USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY) values ( 50,'email50','login50','name50','2022-01-01');
 
 merge into FILMS (FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_RATING )
-    values ( 10,'name10', 'des10', '2022-01-01',10,1 );
+    values ( 10,'name10', 'des10', '2022-01-01',10,1);
 merge into FILMS (FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_RATING )
-    values ( 20,'name10', 'des10', '2022-01-01',10,1 );
+    values ( 20,'name10', 'des10', '2022-01-01',10,1);
+
+merge into FRIENDSHIP (USER_ID, FRIEND_ID) values ( 20,10);
+
+merge into FILMS_GENRE (FILM_ID, GENRE_ID) values ( 20,1);
+
+merge into USERS_FILMS (FILM_ID, USER_ID) values ( 20,10);
+merge into USERS_FILMS (FILM_ID, USER_ID) values ( 20,20);
+merge into USERS_FILMS (FILM_ID, USER_ID) values ( 20,30);
